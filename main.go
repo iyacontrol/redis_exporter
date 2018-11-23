@@ -31,6 +31,15 @@ var (
 	useCfBindings    = flag.Bool("use-cf-bindings", false, "Use Cloud Foundry service bindings")
 	redisMetricsOnly = flag.Bool("redis-only-metrics", false, "Whether to export go runtime metrics also")
 
+	// aws elastic cache
+	useAWSDiscoverys   = flag.Bool("use-aws-discovery", false, "Use AWS ElasticCache redis service discovery")
+	awsRegion          = flag.String("aws_region", "", "AWS Regions and Endpoints")
+	awsAccessKey       = flag.String("aws_access_key", "", "AWS Access Key")
+	awsSecretKey       = flag.String("aws_secret_key", "", "AWS Secret Key")
+	awsProfile         = flag.String("aws_profile", "", "AWS profile")
+	awsRoleARN         = flag.String("aws_role_arn", "", "AWS role arn")
+	awsRefreshInterval = flag.String("aws_refresh_interval", "120s", "refresh interval")
+
 	// VERSION, BUILD_DATE, GIT_COMMIT are filled in by the build script
 	VERSION     = "<<< filled in by build >>>"
 	BUILD_DATE  = "<<< filled in by build >>>"
@@ -72,6 +81,8 @@ func main() {
 		log.Fatal("Cannot specify both redis.addr and redis.file")
 	}
 
+	var discovery *exporter.Discovery
+
 	var addrs, passwords, aliases []string
 
 	switch {
@@ -83,6 +94,17 @@ func main() {
 		}
 	case *useCfBindings:
 		addrs, passwords, aliases = exporter.GetCloudFoundryRedisBindings()
+	case *useAWSDiscoverys:
+		c , err := exporter.NewSDConfig(*awsRegion, *awsAccessKey, *awsSecretKey, *awsProfile, *awsRoleARN, *awsRefreshInterval)
+		if err != nil {
+			log.Fatal(err)
+		}
+		discovery = exporter.NewDiscovery(c)
+		addrs, passwords, aliases, err = discovery.Init()
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	default:
 		addrs, passwords, aliases = exporter.LoadRedisArgs(*redisAddr, *redisPassword, *redisAlias, *separator)
 	}
@@ -138,5 +160,11 @@ func main() {
 	log.Printf("Providing metrics at %s%s", *listenAddress, *metricPath)
 	log.Printf("Connecting to redis hosts: %#v", addrs)
 	log.Printf("Using alias: %#v", aliases)
+
+	//if *useAWSDiscoverys {
+	//	go discovery.Run(context.TODO(), exp)
+	//}
+
+
 	log.Fatal(http.ListenAndServe(*listenAddress, nil))
 }

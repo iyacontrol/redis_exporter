@@ -101,6 +101,7 @@ func GetCloudFoundryRedisBindings() (addrs, passwords, aliases []string) {
 	return
 }
 
+
 func getAlternative(credentials map[string]interface{}, alternatives ...string) string {
 	for _, key := range alternatives {
 		if value, ok := credentials[key]; ok {
