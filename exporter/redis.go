@@ -48,6 +48,8 @@ type Exporter struct {
 	metrics      map[string]*prometheus.GaugeVec
 	metricsMtx   sync.RWMutex
 	sync.RWMutex
+
+	redisMtx sync.RWMutex
 }
 
 type scrapeResult struct {
@@ -949,4 +951,13 @@ func (e *Exporter) collectMetrics(metrics chan<- prometheus.Metric) {
 	for _, m := range e.metrics {
 		m.Collect(metrics)
 	}
+}
+
+func (e *Exporter) UpdateRedis(addrs, passwords, aliases []string) {
+	e.redisMtx.Lock()
+	defer  e.redisMtx.Unlock()
+
+	e.redis.Addrs = addrs
+	e.redis.Passwords = passwords
+	e.redis.Aliases = aliases
 }

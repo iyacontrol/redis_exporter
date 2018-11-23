@@ -3,7 +3,6 @@ package exporter
 import (
 	"time"
 	"fmt"
-	"context"
 	"net"
 
 	"github.com/prometheus/common/model"
@@ -87,7 +86,7 @@ func NewDiscovery(conf *SDConfig) *Discovery {
 
 
 // Run implements the Discoverer interface.
-func (d *Discovery) Run(ctx context.Context, exp *Exporter) {
+func (d *Discovery) Run(exp *Exporter) {
 	ticker := time.NewTicker(d.interval)
 	defer ticker.Stop()
 
@@ -95,16 +94,10 @@ func (d *Discovery) Run(ctx context.Context, exp *Exporter) {
 		select {
 		case <-ticker.C:
 			if addrs, passwords, aliases, err := d.refresh(); err != nil {
-				exp.redis = RedisHost{
-					Addrs: addrs,
-					Passwords:passwords,
-					Aliases:aliases,
-					}
+				exp.UpdateRedis(addrs, passwords, aliases)
 			} else {
 				log.Errorf("fail to discovery redis instance of %s", err)
 			}
-		case <-ctx.Done():
-			return
 		}
 	}
 }

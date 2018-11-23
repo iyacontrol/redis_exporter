@@ -161,9 +161,9 @@ func main() {
 	log.Printf("Connecting to redis hosts: %#v", addrs)
 	log.Printf("Using alias: %#v", aliases)
 
-	//if *useAWSDiscoverys {
-	//	go discovery.Run(context.TODO(), exp)
-	//}
+	if *useAWSDiscoverys {
+		go discovery.Run(exp)
+	}
 
 
 	log.Fatal(http.ListenAndServe(*listenAddress, nil))
