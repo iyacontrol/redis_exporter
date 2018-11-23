@@ -2,108 +2,196 @@
 
 
 [[projects]]
+  digest = "1:ca54c491a13d863f9a5563b581a2783ac2fe56ef2f4d93370adf9dbcddf3451b"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/sdkio",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/xml/xmlutil",
+    "service/elasticache",
+    "service/sts",
+  ]
+  pruneopts = "NUT"
+  revision = "57d992f58b7e092da10921050426717f7944bd42"
+  version = "v1.15.80"
+
+[[projects]]
   branch = "master"
+  digest = "1:cb0535f5823b47df7dcb9768ebb6c000b79ad115472910c70efe93c9ed9b2315"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
+  pruneopts = "NUT"
   revision = "4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9"
 
 [[projects]]
+  digest = "1:8af91758f758c09ed3d7c3dea4f7dd1e1c4c9bbe58ea08b044195ae97aae78b2"
   name = "github.com/cloudfoundry-community/go-cfenv"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "f920e9562d5f951cbf11785728f67258c38a10d0"
   version = "v1.17.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:b1ef763b6334cf7eb68249217b77955fdae4d2475e13d7d38eb4b452f0633944"
+  name = "github.com/golang/protobuf"
+  packages = ["proto"]
+  pruneopts = "NUT"
+  revision = "1e59b77b52bf8e4b449a57e6f79f21226d571845"
+
+[[projects]]
+  digest = "1:38ec74012390146c45af1f92d46e5382b50531247929ff3a685d2b2be65155ac"
   name = "github.com/gomodule/redigo"
   packages = [
     "internal",
-    "redis"
+    "redis",
   ]
+  pruneopts = "NUT"
   revision = "9c11da706d9b7902c6da69c592f75637793fe121"
   version = "v2.0.0"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/golang/protobuf"
-  packages = ["proto"]
-  revision = "1e59b77b52bf8e4b449a57e6f79f21226d571845"
+  digest = "1:ac6d01547ec4f7f673311b4663909269bfb8249952de3279799289467837c3cc"
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  pruneopts = "NUT"
+  revision = "0b12d6b5"
 
 [[projects]]
+  digest = "1:5985ef4caf91ece5d54817c11ea25f182697534f8ae6521eadcd628c142ac4b6"
   name = "github.com/matttproud/golang_protobuf_extensions"
   packages = ["pbutil"]
+  pruneopts = "NUT"
   revision = "3247c84500bff8d9fb6d579d800f20b3e091582c"
   version = "v1.0.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:8108ffa4a49c79e05952f1a9f5bd410a3d15b30b282a30f6cca73085cc133640"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "06020f85339e21b2478f756a78e295255ffa4d6a"
 
 [[projects]]
+  digest = "1:03bca087b180bf24c4f9060775f137775550a0834e18f0bca0520a868679dbd7"
   name = "github.com/prometheus/client_golang"
   packages = [
     "prometheus",
-    "prometheus/promhttp"
+    "prometheus/promhttp",
   ]
+  pruneopts = "NUT"
   revision = "c5b7fccd204277076155f10851dad72b76a49317"
   version = "v0.8.0"
 
 [[projects]]
   branch = "master"
+  digest = "1:32d10bdfa8f09ecf13598324dba86ab891f11db3c538b6a34d1c3b5b99d7c36b"
   name = "github.com/prometheus/client_model"
   packages = ["go"]
+  pruneopts = "NUT"
   revision = "6f3806018612930941127f2a7c6c453ba2c527d2"
 
 [[projects]]
   branch = "master"
+  digest = "1:41ed1109613315e6e242a7a6039c30ee6763937af3c878d105b82eb33c51e8b1"
   name = "github.com/prometheus/common"
   packages = [
     "expfmt",
     "internal/bitbucket.org/ww/goautoneg",
-    "model"
+    "model",
   ]
+  pruneopts = "NUT"
   revision = "e3fb1a1acd7605367a2b378bc2e2f893c05174b7"
 
 [[projects]]
   branch = "master"
+  digest = "1:666a4c4cb94abb2022ffa52d41906556dcfe63029338266c813e0a75fe7533b0"
   name = "github.com/prometheus/procfs"
   packages = [
     ".",
-    "xfs"
+    "xfs",
   ]
+  pruneopts = "NUT"
   revision = "a6e9df898b1336106c743392c48ee0b71f5c4efa"
 
 [[projects]]
+  digest = "1:e0d0f42915237d92f875aa6a042e044aef92b90860988e70726601093df180e6"
   name = "github.com/prometheus/prometheus"
   packages = ["util/strutil"]
+  pruneopts = "NUT"
   revision = "0a74f98628a0463dddc90528220c94de5032d1a0"
   version = "v2.0.0"
 
 [[projects]]
+  digest = "1:6201742366c1518fc5f0df9ccdb4d193fc8a2aef2cc57bf164c9bca23bd5f869"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
+  pruneopts = "NUT"
   revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
   version = "v1.0.4"
 
 [[projects]]
   branch = "master"
+  digest = "1:5a7b6061560d920434c4b853af04fd1027215d80c8645bba360841edb29e672a"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
+  pruneopts = "NUT"
   revision = "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
 
 [[projects]]
   branch = "master"
+  digest = "1:3794a6e3ea1dd473f2866f7942f2ca25dc6d4b38f70ba1dadb14adde0f1e0d09"
   name = "golang.org/x/sys"
   packages = [
     "unix",
-    "windows"
+    "windows",
   ]
+  pruneopts = "NUT"
   revision = "665f6529cca930e27b831a0d1dafffbe1c172924"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "64bcf02f7a4bee555d0391b42f0d1c2e7f614ab7bd691a737bb3f81a99a9c2b0"
+  input-imports = [
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
+    "github.com/aws/aws-sdk-go/aws/credentials/stscreds",
+    "github.com/aws/aws-sdk-go/aws/ec2metadata",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/elasticache",
+    "github.com/cloudfoundry-community/go-cfenv",
+    "github.com/gomodule/redigo/redis",
+    "github.com/prometheus/client_golang/prometheus",
+    "github.com/prometheus/client_golang/prometheus/promhttp",
+    "github.com/prometheus/client_model/go",
+    "github.com/prometheus/common/model",
+    "github.com/prometheus/prometheus/util/strutil",
+    "github.com/sirupsen/logrus",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
