@@ -3,6 +3,7 @@ package exporter
 import (
 	"fmt"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -139,6 +140,10 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 	if len(output.CacheClusters) > 0 {
 		for _, cluster := range output.CacheClusters {
 			if *cluster.Engine != EngineRedis {
+				continue
+			}
+
+			if !strings.Contains(*cluster.CacheClusterId, "prod") {
 				continue
 			}
 
