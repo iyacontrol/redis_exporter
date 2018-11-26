@@ -15,7 +15,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const EngineMemcached = "memcached"
+const EngineRedis = "redis"
 
 // SDConfig is the configuration for EC2 based service discovery.
 type SDConfig struct {
@@ -34,7 +34,7 @@ func NewSDConfig(awsRegion, awsAccessKey, awsSecretKey, awsProfile, awsRoleARN, 
 		SecretKey:       awsSecretKey,
 		Profile:         awsProfile,
 		RoleARN:         awsRoleARN,
-		RefreshInterval: model.Duration(300 * time.Second),
+		RefreshInterval: model.Duration(600 * time.Second),
 	}
 
 	if awsRefreshInterval != "" {
@@ -138,7 +138,7 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 
 	if len(output.CacheClusters) > 0 {
 		for _, cluster := range output.CacheClusters {
-			if *cluster.Engine == EngineMemcached {
+			if *cluster.Engine != EngineRedis {
 				continue
 			}
 
@@ -146,7 +146,7 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 				addr := fmt.Sprintf("redis://%s", net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port)))
 				addrs = append(addrs, addr)
 				passwords = append(passwords, "")
-				aliases = append(aliases, "")
+				aliases = append(aliases, *cluster.CacheClusterId)
 			}
 
 		}
