@@ -749,9 +749,9 @@ func getKeysFromPatterns(c redis.Conn, keys []dbKeyPair) (expandedKeys []dbKeyPa
 
 func (e *Exporter) scrapeRedisHost(scrapes chan<- scrapeResult, addr string, idx int) error {
 	options := []redis.DialOption{
-		redis.DialConnectTimeout(2 * time.Second),
-		redis.DialReadTimeout(2 * time.Second),
-		redis.DialWriteTimeout(2 * time.Second),
+		redis.DialConnectTimeout(5 * time.Second),
+		redis.DialReadTimeout(5 * time.Second),
+		redis.DialWriteTimeout(5 * time.Second),
 	}
 
 	if len(e.redis.Passwords) > idx && e.redis.Passwords[idx] != "" {
@@ -913,16 +913,21 @@ func (e *Exporter) scrape(scrapes chan<- scrapeResult) {
 	now := time.Now().UnixNano()
 	e.totalScrapes.Inc()
 
+	var wg sync.WaitGroup
+	wg.Add(len(e.redis.Addrs))
 	errorCount := 0
 	for idx, addr := range e.redis.Addrs {
-		var up float64 = 1
-		if err := e.scrapeRedisHost(scrapes, addr, idx); err != nil {
-			errorCount++
-			up = 0
-		}
-		scrapes <- scrapeResult{Name: "up", Addr: addr, Alias: e.redis.Aliases[idx], Value: up}
+		go func() {
+			var up float64 = 1
+			if err := e.scrapeRedisHost(scrapes, addr, idx); err != nil {
+				errorCount++
+				up = 0
+			}
+			scrapes <- scrapeResult{Name: "up", Addr: addr, Alias: e.redis.Aliases[idx], Value: up}
+		}()
 	}
 
+	wg.Wait()
 	e.scrapeErrors.Set(float64(errorCount))
 	e.duration.Set(float64(time.Now().UnixNano()-now) / 1000000000)
 }
