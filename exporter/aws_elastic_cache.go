@@ -91,7 +91,7 @@ func (d *Discovery) Run(exp *Exporter) {
 	for {
 		select {
 		case <-ticker.C:
-			if addrs, passwords, aliases, err := d.refresh(); err != nil {
+			if addrs, passwords, aliases, err := d.refresh(); err == nil {
 				exp.UpdateRedis(addrs, passwords, aliases)
 			} else {
 				log.Errorf("fail to discovery redis instance of %s", err)
