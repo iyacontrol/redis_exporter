@@ -749,9 +749,9 @@ func getKeysFromPatterns(c redis.Conn, keys []dbKeyPair) (expandedKeys []dbKeyPa
 
 func (e *Exporter) scrapeRedisHost(scrapes chan<- scrapeResult, addr string, idx int) error {
 	options := []redis.DialOption{
-		redis.DialConnectTimeout(5 * time.Second),
-		redis.DialReadTimeout(5 * time.Second),
-		redis.DialWriteTimeout(5 * time.Second),
+		redis.DialConnectTimeout(2 * time.Second),
+		redis.DialReadTimeout(2 * time.Second),
+		redis.DialWriteTimeout(2 * time.Second),
 	}
 
 	if len(e.redis.Passwords) > idx && e.redis.Passwords[idx] != "" {
@@ -955,7 +955,7 @@ func (e *Exporter) collectMetrics(metrics chan<- prometheus.Metric) {
 
 func (e *Exporter) UpdateRedis(addrs, passwords, aliases []string) {
 	e.redisMtx.Lock()
-	defer  e.redisMtx.Unlock()
+	defer e.redisMtx.Unlock()
 
 	e.redis.Addrs = addrs
 	e.redis.Passwords = passwords
