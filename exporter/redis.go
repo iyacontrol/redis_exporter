@@ -918,6 +918,7 @@ func (e *Exporter) scrape(scrapes chan<- scrapeResult) {
 	errorCount := 0
 	for idx, addr := range e.redis.Addrs {
 		go func() {
+			defer wg.Done()
 			var up float64 = 1
 			if err := e.scrapeRedisHost(scrapes, addr, idx); err != nil {
 				errorCount++
