@@ -146,7 +146,7 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 				addr := fmt.Sprintf("redis://%s", net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port)))
 				addrs = append(addrs, addr)
 				passwords = append(passwords, "")
-				aliases = append(aliases, *cluster.CacheClusterId)
+				aliases = append(aliases, "")
 			}
 
 		}
