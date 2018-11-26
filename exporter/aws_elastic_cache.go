@@ -1,20 +1,19 @@
 package exporter
 
 import (
-	"time"
 	"fmt"
 	"net"
+	"time"
 
-	"github.com/prometheus/common/model"
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	log "github.com/sirupsen/logrus"
+	"github.com/aws/aws-sdk-go/aws/ec2metadata"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/elasticache"
+	"github.com/prometheus/common/model"
+	log "github.com/sirupsen/logrus"
 )
-
 
 const EngineMemcached = "memcached"
 
@@ -61,10 +60,10 @@ func NewSDConfig(awsRegion, awsAccessKey, awsSecretKey, awsProfile, awsRoleARN, 
 }
 
 type Discovery struct {
-	aws             *aws.Config
-	interval        time.Duration
-	profile         string
-	roleARN         string
+	aws      *aws.Config
+	interval time.Duration
+	profile  string
+	roleARN  string
 }
 
 func NewDiscovery(conf *SDConfig) *Discovery {
@@ -83,7 +82,6 @@ func NewDiscovery(conf *SDConfig) *Discovery {
 		interval: time.Duration(conf.RefreshInterval),
 	}
 }
-
 
 // Run implements the Discoverer interface.
 func (d *Discovery) Run(exp *Exporter) {
@@ -104,7 +102,7 @@ func (d *Discovery) Run(exp *Exporter) {
 
 // Init Get an initial set right away..
 func (d *Discovery) Init() ([]string, []string, []string, error) {
-	return  d.refresh()
+	return d.refresh()
 }
 
 func (d *Discovery) refresh() ([]string, []string, []string, error) {
@@ -115,7 +113,6 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("could not create aws session: %s", err)
 	}
-
 
 	var elasticaches *elasticache.ElastiCache
 	if d.roleARN != "" {
@@ -140,13 +137,13 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 	var aliases []string
 
 	if len(output.CacheClusters) > 0 {
-		for _, cluster := range output.CacheClusters{
+		for _, cluster := range output.CacheClusters {
 			if *cluster.Engine == EngineMemcached {
 				continue
 			}
 
 			for _, node := range cluster.CacheNodes {
-				addr := net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port))
+				addr := fmt.Sprintf("redis://%s", net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port)))
 				addrs = append(addrs, addr)
 				passwords = append(passwords, "")
 				aliases = append(aliases, "")
@@ -156,5 +153,5 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 
 	}
 
-	return  addrs, passwords, aliases, nil
+	return addrs, passwords, aliases, nil
 }
