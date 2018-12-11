@@ -128,34 +128,34 @@ func (d *Discovery) refresh() ([]string, []string, []string, error) {
 		ShowCacheNodeInfo: &showCacheNodeInfo,
 	}
 
-	output, err := elasticaches.DescribeCacheClusters(input)
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("could not describe cache clusters: %s", err)
-	}
-
 	var addrs []string
 	var passwords []string
 	var aliases []string
 
-	if len(output.CacheClusters) > 0 {
-		for _, cluster := range output.CacheClusters {
-			if *cluster.Engine != EngineRedis {
-				continue
-			}
+	if err := elasticaches.DescribeCacheClustersPages(input, func(output *elasticache.DescribeCacheClustersOutput, b bool) bool {
+		if len(output.CacheClusters) > 0 {
+			for _, cluster := range output.CacheClusters {
+				if *cluster.Engine != EngineRedis {
+					continue
+				}
 
-			if !strings.Contains(*cluster.CacheClusterId, "prod") {
-				continue
-			}
+				if !strings.Contains(*cluster.CacheClusterId, "prod") {
+					continue
+				}
 
-			for _, node := range cluster.CacheNodes {
-				addr := fmt.Sprintf("redis://%s", net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port)))
-				addrs = append(addrs, addr)
-				passwords = append(passwords, "")
-				aliases = append(aliases, "")
+				for _, node := range cluster.CacheNodes {
+					addr := fmt.Sprintf("redis://%s", net.JoinHostPort(*node.Endpoint.Address, fmt.Sprintf("%d", *node.Endpoint.Port)))
+					addrs = append(addrs, addr)
+					passwords = append(passwords, "")
+					aliases = append(aliases, "")
+				}
+
 			}
 
 		}
-
+		return true
+	});err != nil {
+		return nil, nil, nil, fmt.Errorf("could not describe cache clusters: %s", err)
 	}
 
 	return addrs, passwords, aliases, nil
