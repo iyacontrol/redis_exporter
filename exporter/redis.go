@@ -908,21 +908,34 @@ func (e *Exporter) scrapeRedisHost(scrapes chan<- scrapeResult, addr string, idx
 }
 
 func (e *Exporter) scrape(scrapes chan<- scrapeResult) {
+	e.redisMtx.Lock()
+	defer e.redisMtx.Unlock()
+
 	defer close(scrapes)
 
 	now := time.Now().UnixNano()
 	e.totalScrapes.Inc()
 
 	errorCount := 0
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(e.redis.Addrs))
+
 	for idx, addr := range e.redis.Addrs {
-		var up float64 = 1
-		if err := e.scrapeRedisHost(scrapes, addr, idx); err != nil {
-			errorCount++
-			up = 0
-		}
-		scrapes <- scrapeResult{Name: "up", Addr: addr, Alias: e.redis.Aliases[idx], Value: up}
+		go func(addr string, idx int) {
+			var up float64 = 1
+			if err := e.scrapeRedisHost(scrapes, addr, idx); err != nil {
+				errorCount++
+				up = 0
+			}
+			scrapes <- scrapeResult{Name: "up", Addr: addr, Alias: e.redis.Aliases[idx], Value: up}
+
+			wg.Done()
+		}(addr, idx)
 
 	}
+
+	wg.Wait()
 
 	e.scrapeErrors.Set(float64(errorCount))
 	e.duration.Set(float64(time.Now().UnixNano()-now) / 1000000000)
